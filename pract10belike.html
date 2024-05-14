@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление информацией об автомобилях</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <style>body {
+        background: url(https://i.pinimg.com/564x/91/d4/17/91d417c164962c8c16f6f69dbb3edba4.jpg);
+        color: red;
+        text-shadow: 1px 1px 2px black
+        
+    } </style>
+    <div class="container mt-5">
+        <h1>Управление информацией об автомобилях</h1>
+
+        <div class="mb-3">
+            <input type="text" id="inputBrand" class="form-control" placeholder="Марка">
+            <input type="text" id="inputModel" class="form-control mt-2" placeholder="Модель">
+            <input type="number" id="inputYear" class="form-control mt-2" placeholder="Год выпуска">
+            <input type="text" id="inputColor" class="form-control mt-2" placeholder="Цвет">
+            <input type="number" id="inputPrice" class="form-control mt-2" placeholder="Цена">
+            <button class="btn btn-primary mt-2" onclick="addCar()">Добавить автомобиль</button>
+        </div>
+
+        <div id="carList" class="row">
+        </div>
+    </div>
+
+    <script>
+        class Car {
+            constructor(brand, model, year, color, price) {
+                this.brand = brand;
+                this.model = model;
+                this.year = year;
+                this.color = color;
+                this.price = price;
+            }
+
+            getCarInfo() {
+                return `${this.brand} ${this.model} (${this.year}), Цвет: ${this.color}, Цена: ${this.price} руб.`;
+            }
+        }
+
+        function addCar() {
+            const brand = document.getElementById('inputBrand').value;
+            const model = document.getElementById('inputModel').value;
+            const year = document.getElementById('inputYear').value;
+            const color = document.getElementById('inputColor').value;
+            const price = document.getElementById('inputPrice').value;
+
+            const car = new Car(brand, model, year, color, price);
+
+            const carList = document.getElementById('carList');
+
+            const card = document.createElement('div');
+            card.classList.add('col-md-4', 'my-2');
+            card.innerHTML = `
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">${car.getCarInfo()}</h5>
+                        <button class="btn btn-primary" onclick="editCar(this)">Редактировать</button>
+                        <button class="btn btn-danger" onclick="deleteCar(this)">Удалить</button>
+                    </div>
+                </div>
+            `;
+
+            carList.appendChild(card);
+        }
+
+        function editCar(button) {
+            const card = button.closest('.card');
+            const carInfo = card.querySelector('.card-title').textContent;
+            const newBrand = prompt('Введите новую марку для автомобиля ' + carInfo.split(' ')[0]);
+
+            if (newBrand) {
+                const newCarInfo = carInfo.replace(/^(.*?)(?=\s)/, newBrand);
+                card.querySelector('.card-title').textContent = newCarInfo;
+            }
+        }
+
+        function deleteCar(button) {
+            const card = button.closest('.col-md-4');
+            card.remove();
+        }
+    </script>
+</body>
+
+</html>
